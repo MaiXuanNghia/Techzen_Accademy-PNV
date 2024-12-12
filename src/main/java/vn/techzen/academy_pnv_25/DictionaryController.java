@@ -14,19 +14,19 @@ import java.util.List;
 @RequestMapping("/dictionary")
 public class DictionaryController {
     private List<Dictionary> dictionarys = Arrays.asList(
-            new Dictionary("Banana", "A long curved fruit that grows in clusters and has soft pulpy flesh and yellow skin when ripe."),
-            new Dictionary("Apple", "A round fruit with red, yellow, or green skin and firm white flesh."),
-            new Dictionary("Orange", "A citrus fruit with a tough bright reddish-yellow rind and juicy, tangy flesh."),
-            new Dictionary("Grapes", "A small round fruit that grows in bunches on vines and can be green, red, or purple."),
-            new Dictionary("Mango", "A tropical stone fruit with a smooth skin, sweet flesh, and a large pit."),
-            new Dictionary("Pineapple", "A large tropical fruit with a tough spiky skin and sweet yellow flesh inside.")
+            new Dictionary("Banana", "A long curved fruit that grows in clusters and has soft pulpy flesh and yellow skin when ripe.", "Qủa chuối"),
+            new Dictionary("Apple", "A round fruit with red, yellow, or green skin and firm white flesh.", "Qủa táo"),
+            new Dictionary("Orange", "A citrus fruit with a tough bright reddish-yellow rind and juicy, tangy flesh.", "Qủa cam"),
+            new Dictionary("Grapes", "A small round fruit that grows in bunches on vines and can be green, red, or purple.", "Qủa nho"),
+            new Dictionary("Mango", "A tropical stone fruit with a smooth skin, sweet flesh, and a large pit.", "Qủa xoài"),
+            new Dictionary("Pineapple", "A large tropical fruit with a tough spiky skin and sweet yellow flesh inside.", "Qủa dứa")
     );
 
     @GetMapping("/lookup")
     public ResponseEntity<String> lookup(@RequestParam (defaultValue = " ") String word) {
         for (Dictionary dictionary : dictionarys) {
             if (dictionary.getWord().equals(word)) {
-                return ResponseEntity.ok(dictionary.getDefinition());
+                return ResponseEntity.ok(dictionary.getDefinition() + "\n" + dictionary.getMeaning());
             }
         }
 
