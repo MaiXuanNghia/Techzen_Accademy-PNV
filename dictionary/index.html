@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Từ Điển</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #f7f7f7;
+        margin: 0;
+      }
+
+      .container {
+        background-color: #fff;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 600px;
+      }
+
+      h1 {
+        font-size: 30px;
+        margin-bottom: 20px;
+      }
+
+      .search-bar {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .search-bar input {
+        width: 80%;
+        padding: 10px;
+        font-size: 16px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+      }
+
+      .search-bar button {
+        width: 20%;
+        padding: 10px;
+        font-size: 16px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      .search-bar button:hover {
+        background-color: #0056b3;
+      }
+
+      .result {
+        font-size: 20px;
+        font-weight: bold;
+        color: #28a745;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app" class="container">
+      <h1>Từ Điển</h1>
+      <div class="search-bar">
+        <input type="text" id="search" placeholder="Nhập từ cần tra" />
+        <button @click="searchWord">Tìm kiếm</button>
+      </div>
+      <div class="result">
+        <p id="meaning">{{ meaning }}</p>
+      </div>
+      <div class="result">
+        <p id="definition">{{ definition }}</p>
+      </div>
+    </div>
+
+    <script>
+      const app = Vue.createApp({
+        data() {
+          return {
+            meaning: '',
+            definition: '',
+          };
+        },
+        methods: {
+          searchWord() {
+            var word = document.getElementById("search").value; 
+            axios
+              .get("http://localhost:8080/dictionary/lookup?word=" + word)
+              .then((response) => {
+                this.meaning = response.data.meaning;
+                this.definition = response.data.definition;
+              })
+              .catch((error) => {
+                console.error(error);
+                this.meaning = "Không tìm thấy từ này trong từ điển.";
+                this.definition = "";
+              });
+          },
+        },
+      });
+
+      app.mount("#app");
+    </script>
+  </body>
+</html>
