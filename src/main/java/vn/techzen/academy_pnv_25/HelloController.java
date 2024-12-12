@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/hello")
 public class HelloController {
     @GetMapping
-    public String hello(@RequestParam(defaultValue = "Students") String name) {
-        return "Welcome to Spring Boot 3, learning at StudyArt " + name;
+    public String hello(@RequestParam(defaultValue = "Guest") String name) {
+        return String.format("Welcome to Spring Boot 3, learning at StudyArt %s!!!", name);
     }
 }
