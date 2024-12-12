@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/students")
@@ -65,6 +66,20 @@ public class StudentController {
             }
         }
         return null;
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<Student>> searchStudents(@RequestParam String keyword) {
+        List<Student> matchedStudents = new ArrayList<>();
+        for (Student student : students) {
+            if (student.getName().toLowerCase().contains(keyword.toLowerCase())) {
+                matchedStudents.add(student);
+            }
+        }
+        if (matchedStudents.isEmpty()) {
+            return null;
+        }
+        return ResponseEntity.ok(matchedStudents);
     }
 }
 
