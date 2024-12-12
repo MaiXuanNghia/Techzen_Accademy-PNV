@@ -23,7 +23,7 @@ public class DictionaryController {
     );
 
     @GetMapping("/lookup")
-    public ResponseEntity<String> lookup(@RequestParam String word) {
+    public ResponseEntity<String> lookup(@RequestParam (defaultValue = " ") String word) {
         for (Dictionary dictionary : dictionarys) {
             if (dictionary.getWord().equals(word)) {
                 return ResponseEntity.ok(dictionary.getDefinition());
