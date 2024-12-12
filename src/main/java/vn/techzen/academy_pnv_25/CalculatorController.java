@@ -1,13 +1,13 @@
 package vn.techzen.academy_pnv_25;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.lang.model.util.Elements;
 
 @RestController
 @RequestMapping("/calculator")
+@CrossOrigin("http://localhost:5173")
 public class CalculatorController {
     @GetMapping
     public ResponseEntity<?> calculate(
