@@ -22,12 +22,10 @@ public class StudentController {
                     new Student(6, "Hoang Nhat e", 9.5)
             )
     );
-
     @GetMapping
     public ResponseEntity<List<Student>> findAll() {
         return ResponseEntity.ok(students);
     }
-
     @GetMapping("/{id}")
     public ResponseEntity<Student> getStudent(@PathVariable int id) {
         for (Student student : students){
@@ -37,14 +35,12 @@ public class StudentController {
         }
         return null;
     }
-
     @PostMapping
     public ResponseEntity<Student> addStudent(@RequestBody Student student) {
         student.setId((int) (Math.random() * 100000));
         students.add(student);
         return ResponseEntity.status(HttpStatus.CREATED).body(student);
     }
-
     @PutMapping("/{id}")
     public ResponseEntity<Student> updateStudent(@PathVariable int id, @RequestBody Student studentNew) {
         for (Student student : students){
@@ -56,7 +52,6 @@ public class StudentController {
         }
         return null;
     }
-
     @DeleteMapping("/{id}")
     public ResponseEntity<Student> deleteStudent(@PathVariable int id) {
         for (Student student : students){
@@ -67,7 +62,6 @@ public class StudentController {
         }
         return null;
     }
-
     @GetMapping("/search")
     public ResponseEntity<List<Student>> searchStudents(@RequestParam(defaultValue = " ") String keyword) {
         List<Student> matchedStudents = new ArrayList<>();
@@ -77,7 +71,7 @@ public class StudentController {
             }
         }
         if (matchedStudents.isEmpty()) {
-            return ResponseEntity.status(404).body(matchedStudents);
+            return null;
         }
         return ResponseEntity.ok(matchedStudents);
     }
