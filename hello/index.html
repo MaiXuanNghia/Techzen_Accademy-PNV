@@ -1,13 +1,90 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + Vue + TS</title>
+    <title>Hello Techzen Academy</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style>
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        background-color: #f4f4f4;
+      }
+      .container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 80%;
+        max-width: 1200px;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+      .logo {
+        height: 80px;
+      }
+      .title {
+        font-size: 24px;
+        font-weight: bold;
+        color: #333;
+      }
+    </style>
   </head>
   <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.ts"></script>
+    <div id="app" class="container">
+      <div class="title">{{ message }}</div>
+      <div>
+        <input
+          type="text"
+          id="name"
+          placeholder="Nhập name thay đổi param phía back-end"
+        />
+        <button @click="getInputValue">Submit</button>
+      </div>
+    </div>
+
+    <script>
+      const app = Vue.createApp({
+        data() {
+          return {
+            message: "Loading...",
+          };
+        },
+        methods: {
+          getInputValue() {
+            var param = document.getElementById("name").value;
+            axios
+              .get("http://localhost:8080/greeting?name=" + param)
+              .then((response) => {
+                this.message = response.data;
+              })
+              .catch((error) => {
+                console.error(error);
+                this.message = "Failed to load data.";
+              });
+          },
+        },
+        mounted() {
+          axios
+            .get(`http://localhost:8080/greeting`)
+            .then((response) => {
+              this.message = response.data;
+            })
+            .catch((error) => {
+              console.error(error);
+              this.message = "Failed to load data.";
+            });
+        },
+      });
+
+      app.mount("#app");
+    </script>
   </body>
 </html>
