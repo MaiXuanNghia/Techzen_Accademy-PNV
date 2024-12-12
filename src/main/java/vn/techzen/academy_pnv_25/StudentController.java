@@ -69,7 +69,7 @@ public class StudentController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<Student>> searchStudents(@RequestParam String keyword) {
+    public ResponseEntity<List<Student>> searchStudents(@RequestParam(defaultValue = " ") String keyword) {
         List<Student> matchedStudents = new ArrayList<>();
         for (Student student : students) {
             if (student.getName().toLowerCase().contains(keyword.toLowerCase())) {
@@ -77,7 +77,7 @@ public class StudentController {
             }
         }
         if (matchedStudents.isEmpty()) {
-            return null;
+            return ResponseEntity.status(404).body(matchedStudents);
         }
         return ResponseEntity.ok(matchedStudents);
     }
