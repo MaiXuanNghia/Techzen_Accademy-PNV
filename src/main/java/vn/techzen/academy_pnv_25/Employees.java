@@ -1,23 +1,40 @@
 package vn.techzen.academy_pnv_25;
 
-public class Employees {
-    private int id;
-    private String name;
-    private int age;
-    private int salary;
+import java.time.LocalDate;
+import java.util.UUID;
 
-    public Employees(int id, String name, int age, int salary) {
+public class Employees {
+
+    private UUID id;
+
+    private String name;
+
+    private LocalDate dob;
+
+    private Gender gender;
+
+    private Double salary;
+
+    private String phone;
+
+    public Employees(UUID id, String name, LocalDate dob, Gender gender, Double salary, String phone) {
         this.id = id;
         this.name = name;
-        this.age = age;
+        this.dob = dob;
+        this.gender = gender;
         this.salary = salary;
+        this.phone = phone;
     }
 
-    public int getId() {
+    public enum Gender {
+        MALE, FEMALE, OTHER;
+    }
+
+    public UUID getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
@@ -29,19 +46,37 @@ public class Employees {
         this.name = name;
     }
 
-    public int getAge() {
-        return age;
+    public LocalDate getDob() {
+        return dob;
     }
 
-    public void setAge(int age) {
-        this.age = age;
+    public void setDob(LocalDate dob) {
+        this.dob = dob;
     }
 
-    public int getSalary() {
+    public Gender getGender() {
+        return gender;
+    }
+
+    public void setGender(Gender gender) {
+        this.gender = gender;
+    }
+
+    public Double getSalary() {
         return salary;
     }
 
-    public void setSalary(int salary) {
+    public void setSalary(Double salary) {
         this.salary = salary;
     }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
 }
+
+
