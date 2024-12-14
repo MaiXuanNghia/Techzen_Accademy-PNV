@@ -3,6 +3,10 @@ package vn.techzen.academy_pnv_25;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import vn.techzen.academy_pnv_25.dto.ApiResponse;
+import vn.techzen.academy_pnv_25.dto.exception.AppException;
+import vn.techzen.academy_pnv_25.dto.exception.ErrorCode;
+import vn.techzen.academy_pnv_25.utils.JsonResponse;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -25,18 +29,28 @@ public class EmployeesController {
             )
     );
     @GetMapping
-    public ResponseEntity<List<Employees>> getEmployees() {
-        return ResponseEntity.ok(employees);
+    public ResponseEntity<ApiResponse<List<Employees>>> getEmployees() {
+        return JsonResponse.ok(employees);
     };
 
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponse<Employees>> getEmployees(@PathVariable UUID id) {
+        for (Employees emp : employees) {
+            if (emp.getId().equals(id)) {
+                return ResponseEntity.ok(ApiResponse.<Employees>builder().data(emp).build());
+            }
+        }
+        throw new AppException(ErrorCode.EMPLOYEES_NOT_EXIST);
+    }
+
     @PostMapping
-    public ResponseEntity<Employees> addEmployees(@RequestBody Employees NewEmployees) {
+    public ResponseEntity<ApiResponse<Employees>> addEmployees(@RequestBody Employees NewEmployees) {
         employees.add(NewEmployees);
-        return ResponseEntity.status(HttpStatus.CREATED).body(NewEmployees);
+        return JsonResponse.created(NewEmployees);
     };
 
     @PutMapping
-    public ResponseEntity<Employees> updateEmployees(@RequestBody Employees NewEmployees) {
+    public ResponseEntity<ApiResponse<Employees>> updateEmployees(@RequestBody Employees NewEmployees) {
         for (Employees emp : employees) {
             if (emp.getId().equals(NewEmployees.getId())) {
                 emp.setName(NewEmployees.getName());
@@ -45,21 +59,21 @@ public class EmployeesController {
                 emp.setPhone(NewEmployees.getPhone());
                 emp.setDob(NewEmployees.getDob());
 
-                return ResponseEntity.status(HttpStatus.CREATED).body(emp);
+                return JsonResponse.ok(emp);
             }
         }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        throw new AppException(ErrorCode.EMPLOYEES_NOT_EXIST);
     }
 
     @DeleteMapping
-    public ResponseEntity<Employees> deleteEmployees(@RequestBody Employees NewEmployees) {
+    public ResponseEntity<ApiResponse<Employees>> deleteEmployees(@RequestBody Employees NewEmployees) {
         for (Employees emp : employees) {
             if (emp.getId().equals(NewEmployees.getId())) {
                 employees.remove(emp);
 
-                return ResponseEntity.status(HttpStatus.OK).body(emp);
+                return JsonResponse.ok(emp);
             }
         }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        throw new AppException(ErrorCode.EMPLOYEES_NOT_EXIST);
     }
 }
