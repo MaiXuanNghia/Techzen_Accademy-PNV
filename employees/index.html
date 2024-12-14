@@ -148,15 +148,16 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(employess, index) in employess" :key="employess.id">
+            <tr v-for="(employees, index) in employees" :key="employees.id">
               <td>{{ index + 1 }}</td>
-              <td>{{ employess.name }}</td>
-              <td>{{ employess.dob }}</td>
-              <td>{{ employess.gender }}</td>
-              <td>{{ employess.salary }}</td>
+              <td>{{ employees.name }}</td>
+              <td>{{ employees.dob }}</td>
+              <td>{{ employees.gender }}</td>
+              <td>{{ employees.salary }}</td>
               <td>
-                <button @click="showForm(employess)">Sửa</button>
-                <button @click="deleteEmployee(employess)">Xóa</button>
+                <button @click="showForm(employees)">Sửa</button>
+                <button @click="deleteEmployee(employees)">Xóa</button>
+                <button @click="detailEmployee(employees)">Xem Chi tiết</button>
               </td>
             </tr>
           </tbody>
@@ -168,7 +169,7 @@
       <div id="overlay" @click="hideForm"></div>
 
       <form @submit.prevent="updateEmployee">
-        <h2>{{ isEditing ? 'Sửa Nhân Viên' : 'Thêm Nhân Viên' }}</h2>
+        <h2 id="title">{{ isEditing ? 'Sửa Nhân Viên' : 'Thêm Nhân Viên' }}</h2>
         <label>Tên:</label>
         <input v-model="form.name" required /><br />
 
@@ -176,19 +177,21 @@
         <input type="date" v-model="form.dob" required /><br />
 
         <label>Giới tính:</label>
+
         <select v-model="form.gender" required>
           <option value="MALE">Nam</option>
           <option value="FEMALE">Nữ</option>
           <option value="OTHER">Khác</option></select
         ><br />
-
         <label>Lương:</label>
         <input type="number" v-model="form.salary" required /><br />
 
         <label>Số điện thoại:</label>
         <input v-model="form.phone" required /><br />
 
-        <button type="submit">{{ isEditing ? 'Cập nhật' : 'Thêm mới' }}</button>
+        <button type="submit" id="submitButton">
+          {{ isEditing ? 'Cập nhật' : 'Thêm mới' }}
+        </button>
         <button type="button" @click="hideForm">Hủy</button>
       </form>
     </div>
@@ -198,7 +201,7 @@
       createApp({
         data() {
           return {
-            employess: [],
+            employees: [],
             form: {
               id: "",
               name: "",
@@ -218,7 +221,7 @@
             axios
               .get("http://localhost:8080/employees")
               .then((response) => {
-                this.employess = response.data;
+                this.employees = response.data.data;
               })
               .catch((error) => {
                 console.error(error);
@@ -265,6 +268,12 @@
             }
           },
           showForm(employee = null) {
+            const elements = document.querySelectorAll(
+              'input[type="date"], select'
+            );
+            elements.forEach((el) => {
+              el.disabled = false;
+            });
             this.isEditing = !!employee;
             this.form = employee
               ? { ...employee }
@@ -278,6 +287,19 @@
                 };
             document.querySelector("form").style.display = "flex";
             document.getElementById("overlay").style.display = "block";
+          },
+          detailEmployee(employee = null) {
+            this.form = employee;
+            document.querySelector("form").style.display = "flex";
+            document.getElementById("overlay").style.display = "block";
+            document.getElementById("submitButton").style.display = "none";
+            document.getElementById("title").innerText = "Xem Chi Tiết Nhân Viên";
+            const elements = document.querySelectorAll(
+              'input[type="date"], select'
+            );
+            elements.forEach((el) => {
+              el.disabled = true;
+            });
           },
           hideForm() {
             document.querySelector("form").style.display = "none";
