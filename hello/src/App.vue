@@ -1,30 +1,50 @@
-<script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
-</script>
-
 <template>
-  <div>
-    <a href="https://vite.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
+  <div class="container">
+    <div class="title">{{ message }}</div>
+    <div>
+      <input
+        type="text"
+        v-model="name"
+        placeholder="Nhập name thay đổi param phía back-end"
+      />
+      <button @click="getInputValue">Submit</button>
+    </div>
   </div>
-  <HelloWorld msg="Vite + Vue" />
 </template>
 
-<style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
-}
-</style>
+<script>
+import axios from "axios";
+
+export default {
+  data() {
+    return {
+      message: "Loading...",
+      name: "",
+    };
+  },
+  methods: {
+    getInputValue() {
+      axios
+        .get(`http://localhost:8080/greeting?name=${this.name}`)
+        .then((response) => {
+          this.message = response.data;
+        })
+        .catch((error) => {
+          console.error(error);
+          this.message = "Failed to load data.";
+        });
+    },
+  },
+  mounted() {
+    axios
+      .get(`http://localhost:8080/greeting`)
+      .then((response) => {
+        this.message = response.data;
+      })
+      .catch((error) => {
+        console.error(error);
+        this.message = "Failed to load data.";
+      });
+  },
+};
+</script>

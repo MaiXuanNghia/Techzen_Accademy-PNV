@@ -1,30 +1,54 @@
-<script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
-</script>
-
 <template>
-  <div>
-    <a href="https://vite.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
+  <div class="container">
+    <h1>Từ Điển</h1>
+    <div class="search-bar">
+      <input 
+        type="text" 
+        v-model="word" 
+        placeholder="Nhập từ cần tra" 
+      />
+      <button @click="searchWord" id="bSearch">Tìm kiếm</button>
+    </div>
+    <div class="result" v-if="meaning">
+      <p>{{ meaning }}</p>
+    </div>
+    <div class="result" v-if="definition">
+      <p>{{ definition }}</p>
+    </div>
   </div>
-  <HelloWorld msg="Vite + Vue" />
 </template>
 
-<style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
-}
-</style>
+<script>
+import axios from "axios";
+
+export default {
+  data() {
+    return {
+      word: "",
+      meaning: "",
+      definition: "",
+    };
+  },
+  methods: {
+    searchWord() {
+      if (!this.word.trim()) {
+        this.meaning = "Vui lòng nhập một từ để tra cứu.";
+        this.definition = "";
+        return;
+      }
+
+      axios
+        .get(`http://localhost:8080/dictionary/lookup?word=${this.word}`)
+        .then((response) => {
+          this.meaning = response.data.meaning || "Không tìm thấy ý nghĩa.";
+          this.definition = response.data.definition || "Không tìm thấy định nghĩa.";
+        })
+        .catch((error) => {
+          console.error(error);
+          this.meaning = "Không tìm thấy từ này trong từ điển.";
+          this.definition = "";
+        });
+    },
+  },
+};
+</script>
