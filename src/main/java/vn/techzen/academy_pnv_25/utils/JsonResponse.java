@@ -13,4 +13,10 @@ public class JsonResponse {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.<T>builder().data(t).build());
     }
+
+
+
+    public static ResponseEntity<Void> notFound() {
+        return ResponseEntity.notFound().build();
+    }
 }

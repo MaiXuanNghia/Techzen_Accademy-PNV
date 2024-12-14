@@ -25,6 +25,8 @@ public class Employees {
 
     String phone;
 
+    Integer departmentId;
+
     public enum Gender {
         MALE, FEMALE, OTHER;
     }
