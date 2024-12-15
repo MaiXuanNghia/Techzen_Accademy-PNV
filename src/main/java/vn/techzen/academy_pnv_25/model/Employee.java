@@ -1,4 +1,4 @@
-package vn.techzen.academy_pnv_25;
+package vn.techzen.academy_pnv_25.model;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -11,7 +11,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Employees {
+public class Employee {
 
     UUID id;
 

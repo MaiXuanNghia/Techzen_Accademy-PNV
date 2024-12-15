@@ -2,7 +2,6 @@ package vn.techzen.academy_pnv_25.dto.exception;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.HttpStatus;
-import vn.techzen.academy_pnv_25.Department;
 
 @Getter
 @NoArgsConstructor

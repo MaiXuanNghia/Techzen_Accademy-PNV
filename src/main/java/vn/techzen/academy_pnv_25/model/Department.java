@@ -1,4 +1,4 @@
-package vn.techzen.academy_pnv_25;
+package vn.techzen.academy_pnv_25.model;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
