@@ -1,12 +1,13 @@
 package vn.techzen.academy_pnv_25.service;
 
-import vn.techzen.academy_pnv_25.model.Department;
+import vn.techzen.academy_pnv_25.entity.Department;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface IDepartmentService {
 
-    Department getDepartment(Integer id);
+    Optional<Department> getDepartment(Integer id);
 
     List<Department> getAllDepartments();
 

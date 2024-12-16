@@ -1,31 +1,30 @@
-package vn.techzen.academy_pnv_25.controllor;
+package vn.techzen.academy_pnv_25.controller;
 
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import vn.techzen.academy_pnv_25.dto.employee.EmployeeSearchRequest;
-import vn.techzen.academy_pnv_25.model.Employee;
+import vn.techzen.academy_pnv_25.entity.Employee;
 import vn.techzen.academy_pnv_25.dto.ApiResponse;
 import vn.techzen.academy_pnv_25.service.IEmployeeService;
 import vn.techzen.academy_pnv_25.utils.JsonResponse;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
 @RequestMapping("/employees")
 @CrossOrigin("http://localhost:5173")
+@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class EmployeeController {
 
     IEmployeeService employeeService;
-
-    public EmployeeController(IEmployeeService employeeService) {
-        this.employeeService = employeeService;
-    }
 
     @GetMapping
     public ResponseEntity<ApiResponse<List<Employee>>> getEmployees(
@@ -42,22 +41,22 @@ public class EmployeeController {
     };
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<Employee>> getEmployees(@PathVariable UUID id) {
+    public ResponseEntity<ApiResponse<Optional<Employee>>> getEmployees(@PathVariable UUID id) {
         return JsonResponse.ok(employeeService.findById(id));
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse<Employee>> addEmployees(@RequestBody Employee NewEmployees) {
+    public ResponseEntity<?> addEmployees(@RequestBody Employee NewEmployees) {
         return JsonResponse.created(employeeService.save(NewEmployees));
     };
 
     @PutMapping
-    public ResponseEntity<ApiResponse<Employee>> updateEmployees(@RequestBody Employee NewEmployees) {
+    public ResponseEntity<ApiResponse<Optional<Employee>>> updateEmployees(@RequestBody Employee NewEmployees) {
         return JsonResponse.ok(employeeService.update(NewEmployees));
     }
 
     @DeleteMapping
-    public ResponseEntity<ApiResponse<Employee>> deleteEmployees(@RequestBody Employee NewEmployees) {
+    public ResponseEntity<ApiResponse<Optional<Employee>>> deleteEmployees(@RequestBody Employee NewEmployees) {
         return JsonResponse.ok(employeeService.delete(NewEmployees));
     }
 }

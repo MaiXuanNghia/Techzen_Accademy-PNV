@@ -1,17 +1,7 @@
 package vn.techzen.academy_pnv_25.repository;
 
-import vn.techzen.academy_pnv_25.model.Department;
+import org.springframework.data.jpa.repository.JpaRepository;
+import vn.techzen.academy_pnv_25.entity.Department;
 
-import java.util.List;
-
-public interface IDepartmentRepository {
-    List<Department> findAll();
-
-    Department findById(Integer id);
-
-    Department save(Department department);
-
-    Department update(Department department);
-
-    Department delete(Integer id);
+public interface IDepartmentRepository extends JpaRepository<Department, Integer> {
 }

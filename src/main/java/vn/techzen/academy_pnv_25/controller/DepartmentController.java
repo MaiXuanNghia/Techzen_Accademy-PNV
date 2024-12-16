@@ -1,16 +1,16 @@
-package vn.techzen.academy_pnv_25.controllor;
+package vn.techzen.academy_pnv_25.controller;
 
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import vn.techzen.academy_pnv_25.model.Department;
+import vn.techzen.academy_pnv_25.entity.Department;
 import vn.techzen.academy_pnv_25.dto.ApiResponse;
 import vn.techzen.academy_pnv_25.service.IDepartmentService;
 import vn.techzen.academy_pnv_25.utils.JsonResponse;
 
 import java.util.List;
-import java.util.UUID;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/departments")
@@ -34,7 +34,7 @@ public class DepartmentController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<Department>> getDepartmentById(@PathVariable Integer id) {
+    public ResponseEntity<ApiResponse<Optional<Department>>> getDepartmentById(@PathVariable Integer id) {
         return JsonResponse.ok(departmentService.getDepartment(id));
     }
 

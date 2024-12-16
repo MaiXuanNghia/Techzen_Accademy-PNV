@@ -4,7 +4,7 @@ package vn.techzen.academy_pnv_25.dto.employee;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.springframework.format.annotation.DateTimeFormat;
-import vn.techzen.academy_pnv_25.model.Employee;
+import vn.techzen.academy_pnv_25.entity.Employee;
 
 import java.time.LocalDate;
 

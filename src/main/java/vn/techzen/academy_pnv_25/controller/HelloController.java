@@ -1,4 +1,4 @@
-package vn.techzen.academy_pnv_25.controllor;
+package vn.techzen.academy_pnv_25.controller;
 
 import org.springframework.web.bind.annotation.*;
 

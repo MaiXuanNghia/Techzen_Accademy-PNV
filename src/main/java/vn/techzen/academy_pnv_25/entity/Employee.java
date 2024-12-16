@@ -1,5 +1,6 @@
-package vn.techzen.academy_pnv_25.model;
+package vn.techzen.academy_pnv_25.entity;
 
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -11,7 +12,11 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Entity
 public class Employee {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
 
     UUID id;
 
@@ -25,7 +30,9 @@ public class Employee {
 
     String phone;
 
-    Integer departmentId;
+    @ManyToOne
+    @JoinColumn(name = "department_id")
+    Department department;
 
     public enum Gender {
         MALE, FEMALE, OTHER;
