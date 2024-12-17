@@ -56,7 +56,7 @@
 
         <div class="form-actions">
           <button type="button" class="btn-reset" @click="resetSearch">Đặt lại</button>
-          <button @click="fetchEmployees()" class="btn-search">Tìm kiếm</button>
+          <button @click="searchEmployees()" class="btn-search">Tìm kiếm</button>
         </div>
       </form>
     </div>
@@ -84,7 +84,7 @@
           <td>{{ employee.gender }}</td>
           <td>{{ employee.salary }}</td>
           <td>{{ employee.phone }}</td>
-          <td>{{ employee.departmentName }}</td>
+          <td>{{ employee.department.name }}</td>
           <td id="action">
             <button class="btn-update" @click="showForm(employee, 'edit')">Cập nhật</button>
             <button class="btn-delete" @click="deleteEmployee(employee)">Xóa</button>
@@ -93,6 +93,7 @@
         </tr>
       </tbody>
     </table>
+    <h3 v-if="noRecordsFound" style="color: red; text-align: center; width: 100vw;">Không có bản ghi nào được tìm thấy</h3>
 
     <button class="btn-add" @click="showForm(null, 'add')">+ Thêm Mới</button>
   </div>
@@ -133,6 +134,13 @@
       <button type="button" class="btn-close" @click="hideForm">Đóng</button>
     </form>
 </div>
+
+<div class="pagination">
+  <button @click="previousPage" :disabled="currentPage === 0">Trang trước</button>
+  <span>Trang {{ currentPage + 1 }} / {{ totalPages }}</span>
+  <button @click="nextPage" :disabled="currentPage >= totalPages - 1">Trang sau</button>
+</div>
+
 </template>
 
 <script>
@@ -146,22 +154,22 @@ export function generateUUID() {
   });
 }
 
+export function formatToVND(salary) {
+    return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(salary).toString();
+}
+
+
 export default {
-  data() {
+    data() {
     return {
-      employees: [],
-      departments: [],
-      form: {
-        id: "",
-        name: "",
-        dob: "",
-        gender: "",
-        salary: "",
-        phone: "",
-        departmentId: "",
-      },
+      noRecordsFound: false,
       formMode: "",
       isFormVisible: false,
+      employees: [],
+      departments: [],
+      currentPage: 0, // Trang hiện tại (index từ 0)
+      totalPages: 0,  // Tổng số trang
+      pageSize: 5,    // Số bản ghi trên mỗi trang
       searchCriteria: {
         name: "",
         dobFrom: "",
@@ -173,48 +181,54 @@ export default {
       },
     };
   },
-  computed: {
-    isViewMode() {
-      return this.formMode === "details";
-    },
-    isEditing() {
-      return this.formMode === "edit";
-    },
-    formTitle() {
-      if (this.formMode === "details") return "Thông tin chi tiết của nhân viên";
-      return this.isEditing ? "Sửa Nhân Viên" : "Thêm Nhân Viên";
-    },
-  },
-  mounted() {
-    Promise.all([this.fetchDepartments(), this.fetchEmployees()])
-      .then(() => {
-        console.log("Dữ liệu đã tải xong");
-      })
-      .catch((error) => {
-        console.error("Lỗi tải dữ liệu", error);
-      });
-  },
   methods: {
-    fetchEmployees() {
+    fetchEmployees(page = 0) {
+      this.currentPage = page; // Cập nhật trang hiện tại
       axios
-        .get("http://localhost:8080/employees", { params: this.searchCriteria })
+        .get("http://localhost:8080/employees", {
+          params: {
+            ...this.searchCriteria,
+            page: this.currentPage,
+            size: this.pageSize,
+          },
+        })
         .then((response) => {
-          this.employees = response.data.data;
-
-          // Thêm thuộc tính departmentName
-          this.employees.forEach((employee) => {
-            const department = this.departments.find(
-              (dept) => dept.id === employee.departmentId
-            );
-            employee.departmentName = department
-              ? department.name
-              : "Không xác định";
-          });
+          const { content, page } = response.data.data;
+          console.log(content);
+          this.employees = content;
+          this.totalPages = page.totalPages;
+          this.noRecordsFound = this.employees.length === 0;
+          if (this.employees.length <= 0) {
+            this.noRecordsFound = true;
+          }
         })
         .catch((error) => {
-          console.error(error);
+          console.error("Lỗi khi tải nhân viên:", error);
         });
     },
+    nextPage() {
+      if (this.currentPage < this.totalPages - 1) {
+        this.fetchEmployees(this.currentPage + 1);
+      }
+    },
+    previousPage() {
+      if (this.currentPage > 0) {
+        this.fetchEmployees(this.currentPage - 1);
+      }
+    },
+    resetSearch() {
+      this.searchCriteria = {
+        name: "",
+        dobFrom: "",
+        dobTo: "",
+        gender: "",
+        salaryRange: "",
+        phone: "",
+        departmentId: "",
+      };
+      this.fetchEmployees();
+    },
+
     async fetchDepartments() {
       try {
         const response = await axios
@@ -224,26 +238,19 @@ export default {
         console.error(error);
       }
     },
-    // searchEmployees() {
-    //   axios
-    //     .get("http://localhost:8080/employees", { params: this.searchCriteria })
-    //     .then((response) => {
-    //       this.employees = response.data.data;
-
-    //       // Thêm thuộc tính departmentName
-    //       this.employees.forEach((employee) => {
-    //         const department = this.departments.find(
-    //           (dept) => dept.id === employee.departmentId
-    //         );
-    //         employee.departmentName = department
-    //           ? department.name
-    //           : "Không xác định";
-    //       });
-    //     })
-    //     .catch((error) => {
-    //       console.error(error);
-    //     });
-    // },
+    searchEmployees() {
+      axios
+        .get("http://localhost:8080/employees/search", { params: this.searchCriteria })
+        .then((response) => {
+          this.employees = response.data.data;
+          if (this.employees.length <= 0) {
+            this.noRecordsFound = true;
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    },
     resetSearch() {
       this.searchCriteria = {
         name: "",
@@ -258,9 +265,25 @@ export default {
     },
     handleFormSubmit() {
       if (this.isEditing) {
-        console.log(this.form)
+        console.log({
+            id: this.form.id,
+            name: this.form.name,
+            dob: this.form.dob,
+            gender: this.form.gender,
+            salary: this.form.salary,
+            phone: this.form.phone,
+            department: {id: this.form.departmentId, name: this.departments[this.form.departmentId - 1].name},
+          });
         axios
-          .put("http://localhost:8080/employees", this.form)
+          .put("http://localhost:8080/employees", {
+            id: this.form.id,
+            name: this.form.name,
+            dob: this.form.dob,
+            gender: this.form.gender,
+            salary: this.form.salary,
+            phone: this.form.phone,
+            department: {id: this.form.departmentId, name: this.departments[this.form.departmentId - 1].name},
+          })
           .then(() => {
             this.fetchEmployees();
             this.hideForm();
@@ -271,13 +294,12 @@ export default {
       } else {
         axios
           .post("http://localhost:8080/employees", {
-            id: generateUUID(),
             name: this.form.name,
             dob: this.form.dob,
             gender: this.form.gender,
             salary: this.form.salary,
             phone: this.form.phone,
-            departmentId: this.form.departmentId,
+            department: {id: this.form.departmentId, name: this.departments[this.form.departmentId - 1].name},
           })
           .then(() => {
             this.fetchEmployees();
@@ -292,7 +314,7 @@ export default {
       console.log(employee);
       this.formMode = mode;
       this.form = employee
-        ? { ...employee }
+        ? { ...employee, departmentId: employee.department.id }
         : {
             id: "",
             name: "",
@@ -317,6 +339,27 @@ export default {
           console.error(error);
         });
     },
+  },
+  computed: {
+    isViewMode() {
+      return this.formMode === "details";
+    },
+    isEditing() {
+      return this.formMode === "edit";
+    },
+    formTitle() {
+      if (this.formMode === "details") return "Thông tin chi tiết của nhân viên";
+      return this.isEditing ? "Sửa Nhân Viên" : "Thêm Nhân Viên";
+    },
+  },
+  mounted() {
+    Promise.all([this.fetchDepartments(), this.fetchEmployees()])
+      .then(() => {
+        console.log("Dữ liệu đã tải xong");
+      })
+      .catch((error) => {
+        console.error("Lỗi tải dữ liệu", error);
+      });
   },
 };
 </script>
