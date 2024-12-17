@@ -27,7 +27,12 @@ public class EmployeeController {
     IEmployeeService employeeService;
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<Employee>>> getEmployees(
+    public ResponseEntity<ApiResponse<List<Employee>>> getEmployees() {
+        return JsonResponse.ok(employeeService.findAll());
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<ApiResponse<List<Employee>>> searchEmployees(
             @RequestParam(required = false) String name,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dobFrom,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dobTo,
@@ -37,6 +42,7 @@ public class EmployeeController {
             @RequestParam(required = false) Integer departmentId
     ) {
         EmployeeSearchRequest request = new EmployeeSearchRequest(name, dobFrom, dobTo, gender, salaryRange, phone, departmentId);
+        System.out.println(request);
         return JsonResponse.ok(employeeService.findByAttributes(request));
     };
 

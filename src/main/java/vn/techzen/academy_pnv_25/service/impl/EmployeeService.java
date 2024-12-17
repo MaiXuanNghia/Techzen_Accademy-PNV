@@ -23,6 +23,11 @@ public class EmployeeService implements IEmployeeService {
     IEmployeeRepository employeeRepository;
 
     @Override
+    public List<Employee> findAll() {
+        return employeeRepository.findAll();
+    }
+
+    @Override
     public List<Employee> findByAttributes(EmployeeSearchRequest employeeSearchRequest) {
         return employeeRepository.findByAttributes(employeeSearchRequest);
     }
@@ -48,8 +53,8 @@ public class EmployeeService implements IEmployeeService {
             oldEmployee.setDob(employee.getDob());
             oldEmployee.setGender(employee.getGender());
             oldEmployee.setSalary(employee.getSalary());
-            oldEmployee.setDepartment(employee.getDepartment());
             oldEmployee.setPhone(employee.getPhone());
+            oldEmployee.setDepartment(employee.getDepartment());
             employeeRepository.save(oldEmployee);
             return Optional.of(oldEmployee);
         } else {

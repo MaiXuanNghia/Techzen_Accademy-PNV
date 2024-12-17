@@ -1,25 +1,21 @@
 package vn.techzen.academy_pnv_25.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.util.List;
-
+import java.util.HashSet;
+import java.util.Set;
+@Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Entity
-public class Clazz {
+public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
-    int id;
+    Long id;
     String name;
-    @OneToMany(mappedBy = "clazz")// nên hạn chế vì n ảnh hưởng đến hiệu xuất.
-    @JsonIgnoreProperties("clazz")
-    List<Student> students;
+    @ManyToMany(mappedBy = "roles") // Bên này sẽ không tạo cột mà chỉ ánh xạ theo bảng trung gian
+    Set<User> users = new HashSet<>();
 }

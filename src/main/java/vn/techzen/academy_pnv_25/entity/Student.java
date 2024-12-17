@@ -1,5 +1,7 @@
 package vn.techzen.academy_pnv_25.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -18,6 +20,8 @@ public class Student {
     String name;
 
     @ManyToOne
+//    @JsonIgnore; // sẽ bỏ qua tất cả. class tránh đệ quy
+    @JsonIgnoreProperties("students")// chỉ bỏ qua class tránh đệ quy nhưng vẫn hiển thị..
     Clazz clazz;
 
 }
