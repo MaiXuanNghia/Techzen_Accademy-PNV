@@ -3,10 +3,16 @@ package vn.techzen.academy_pnv_25.controller;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import vn.techzen.academy_pnv_25.dto.employee.EmployeeSearchRequest;
+import vn.techzen.academy_pnv_25.dto.page.PageCustom;
+import vn.techzen.academy_pnv_25.dto.page.PageResponse;
 import vn.techzen.academy_pnv_25.entity.Employee;
 import vn.techzen.academy_pnv_25.dto.ApiResponse;
 import vn.techzen.academy_pnv_25.service.IEmployeeService;
@@ -27,8 +33,26 @@ public class EmployeeController {
     IEmployeeService employeeService;
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<Employee>>> getEmployees() {
-        return JsonResponse.ok(employeeService.findAll());
+    public ResponseEntity<ApiResponse<PageResponse<Employee>>> getEmployees(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) LocalDate dobFrom,
+            @RequestParam(required = false) LocalDate dobTo,
+            @RequestParam(required = false) Employee.Gender gender,
+            @RequestParam(required = false) String salaryRange,
+            @RequestParam(required = false) String phone,
+            @RequestParam(required = false) Integer departmentId,
+            Pageable pageable) {
+
+        // Tìm danh sách nhân viên với các tham số được cung cấp
+        Page<Employee> employeePage = employeeService.findAll(name, dobFrom, dobTo, gender, salaryRange, phone, departmentId, pageable);
+
+        // Tạo PageResponse từ Page<Employee>
+        PageResponse<Employee> pageResponse = new PageResponse<>(employeePage);
+
+        // Trả về ResponseEntity với ApiResponse và PageResponse
+        return ResponseEntity.ok(ApiResponse.<PageResponse<Employee>>builder()
+                .data(pageResponse)
+                .build());
     }
 
     @GetMapping("/search")
@@ -42,7 +66,6 @@ public class EmployeeController {
             @RequestParam(required = false) Integer departmentId
     ) {
         EmployeeSearchRequest request = new EmployeeSearchRequest(name, dobFrom, dobTo, gender, salaryRange, phone, departmentId);
-        System.out.println(request);
         return JsonResponse.ok(employeeService.findByAttributes(request));
     };
 
