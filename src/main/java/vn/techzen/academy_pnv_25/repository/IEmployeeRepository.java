@@ -10,7 +10,9 @@ import java.util.UUID;
 
 public interface IEmployeeRepository extends JpaRepository<Employee, UUID> {
     @Query("""
-    FROM Employee e WHERE (:#{#employeeSearchRequest.name} IS NULL OR e.name LIKE CONCAT('%', :#{#employeeSearchRequest.name}, '%'))
+    FROM Employee e
+    WHERE 
+    (:#{#employeeSearchRequest.name} IS NULL OR e.name LIKE CONCAT('%', :#{#employeeSearchRequest.name}, '%'))
     AND (:#{#employeeSearchRequest.dobFrom} IS NULL OR e.dob >= :#{#employeeSearchRequest.dobFrom})
     AND (:#{#employeeSearchRequest.dobTo} IS NULL OR e.dob <= :#{#employeeSearchRequest.dobTo})
     AND (:#{#employeeSearchRequest.gender} IS NULL OR e.gender = :#{#employeeSearchRequest.gender})

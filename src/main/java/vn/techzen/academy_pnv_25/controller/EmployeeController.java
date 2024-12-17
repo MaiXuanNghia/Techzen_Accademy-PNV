@@ -3,6 +3,8 @@ package vn.techzen.academy_pnv_25.controller;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +13,9 @@ import vn.techzen.academy_pnv_25.entity.Employee;
 import vn.techzen.academy_pnv_25.dto.ApiResponse;
 import vn.techzen.academy_pnv_25.service.IEmployeeService;
 import vn.techzen.academy_pnv_25.utils.JsonResponse;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -27,6 +32,19 @@ public class EmployeeController {
     IEmployeeService employeeService;
 
     @GetMapping
+//    public ResponseEntity<ApiResponse<List<Employee>>> getEmployees() {
+//        return JsonResponse.ok(employeeService.findAll());
+//    }
+    public ResponseEntity<ApiResponse<Page<Employee>>> getEmployees(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id,asc") String sort
+    ) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Order.asc(sort)));
+        return JsonResponse.ok(employeeService.findAll(pageable));
+    }
+
+    @GetMapping("/search")
     public ResponseEntity<ApiResponse<List<Employee>>> getEmployees(
             @RequestParam(required = false) String name,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dobFrom,

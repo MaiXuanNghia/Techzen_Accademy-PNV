@@ -3,6 +3,8 @@ package vn.techzen.academy_pnv_25.service.impl;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import vn.techzen.academy_pnv_25.dto.employee.EmployeeSearchRequest;
 import vn.techzen.academy_pnv_25.dto.exception.AppException;
@@ -10,7 +12,6 @@ import vn.techzen.academy_pnv_25.dto.exception.ErrorCode;
 import vn.techzen.academy_pnv_25.entity.Employee;
 import vn.techzen.academy_pnv_25.repository.IEmployeeRepository;
 import vn.techzen.academy_pnv_25.service.IEmployeeService;
-import vn.techzen.academy_pnv_25.utils.JsonResponse;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,6 +28,16 @@ public class EmployeeService implements IEmployeeService {
         return employeeRepository.findByAttributes(employeeSearchRequest);
     }
 
+    @Override
+    public List<Employee> findAll(){
+        return employeeRepository.findAll();
+    };
+
+    @Override
+    public Page<Employee> findAll(Pageable pageable) {
+        return employeeRepository.findAll(pageable);
+    }
+
 
     @Override
     public Optional<Employee> findById(UUID id) {
@@ -34,8 +45,27 @@ public class EmployeeService implements IEmployeeService {
     }
 
     @Override
-    public Employee save(Employee employee) {
-        return employeeRepository.save(employee);
+    public Employee save(Employee newEmployee) {
+        if (newEmployee.getName() == null) {
+            newEmployee.setName(null);
+        }
+        if (newEmployee.getDob() == null) {
+            newEmployee.setDob(null);
+        }
+        if (newEmployee.getGender() == null) {
+            newEmployee.setGender(null);
+        }
+        if (newEmployee.getSalary() == null) {
+            newEmployee.setSalary(null);
+        }
+        if (newEmployee.getPhone() == null) {
+            newEmployee.setPhone(null);
+        }
+        if (newEmployee.getDepartment() == null) {
+            newEmployee.setDepartment(null);
+        }
+
+        return employeeRepository.save(newEmployee);
     }
 
     @Override
