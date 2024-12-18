@@ -6,13 +6,13 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import vn.techzen.academy_pnv_25.dto.employee.EmployeeSearchRequest;
+import vn.techzen.academy_pnv_25.typeCustom.EmployeeSearchRequest;
 import vn.techzen.academy_pnv_25.dto.exception.AppException;
 import vn.techzen.academy_pnv_25.dto.exception.ErrorCode;
 import vn.techzen.academy_pnv_25.entity.Employee;
 import vn.techzen.academy_pnv_25.repository.IEmployeeRepository;
 import vn.techzen.academy_pnv_25.service.IEmployeeService;
-import vn.techzen.academy_pnv_25.utils.JsonResponse;
+import vn.techzen.academy_pnv_25.typeCustom.Gender;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -31,7 +31,7 @@ public class EmployeeService implements IEmployeeService {
     }
 
     @Override
-    public Page<Employee> findAll(String name, LocalDate dobFrom, LocalDate dobTo, Employee.Gender gender, String salaryRange, String phone, Integer departmentId, Pageable pageable) {
+    public Page<Employee> findAll(String name, LocalDate dobFrom, LocalDate dobTo, Gender gender, String salaryRange, String phone, Integer departmentId, Pageable pageable) {
         EmployeeSearchRequest searchRequest = new EmployeeSearchRequest();
         return employeeRepository.findByAttr(searchRequest, pageable);
     }

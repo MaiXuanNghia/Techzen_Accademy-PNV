@@ -17,8 +17,4 @@ import java.util.List;
 public class ClazzResponse {
     int id;
     String name;
-
-    @OneToMany(mappedBy = "clazz")
-    @JsonIgnoreProperties("clazzResponse")
-    List<StudentResponse> studentsResponse;
 }

@@ -1,6 +1,6 @@
 //package vn.techzen.academy_pnv_25.repository.impl;
 //import org.springframework.stereotype.Repository;
-//import vn.techzen.academy_pnv_25.dto.employee.EmployeeSearchRequest;
+//import vn.techzen.academy_pnv_25.typeCustom.EmployeeSearchRequest;
 //import vn.techzen.academy_pnv_25.dto.exception.AppException;
 //import vn.techzen.academy_pnv_25.dto.exception.ErrorCode;
 //import vn.techzen.academy_pnv_25.entity.Employee;

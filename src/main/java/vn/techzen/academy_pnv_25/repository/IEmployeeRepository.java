@@ -4,7 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import vn.techzen.academy_pnv_25.dto.employee.EmployeeSearchRequest;
+import vn.techzen.academy_pnv_25.typeCustom.EmployeeSearchRequest;
 import vn.techzen.academy_pnv_25.entity.Employee;
 
 import java.util.List;

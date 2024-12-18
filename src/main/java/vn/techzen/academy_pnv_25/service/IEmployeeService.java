@@ -2,8 +2,9 @@ package vn.techzen.academy_pnv_25.service;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import vn.techzen.academy_pnv_25.dto.employee.EmployeeSearchRequest;
+import vn.techzen.academy_pnv_25.typeCustom.EmployeeSearchRequest;
 import vn.techzen.academy_pnv_25.entity.Employee;
+import vn.techzen.academy_pnv_25.typeCustom.Gender;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -15,7 +16,7 @@ public interface IEmployeeService  {
 
     List<Employee> findAll();
 
-    Page<Employee> findAll(String name, LocalDate dobFrom, LocalDate dobTo, Employee.Gender gender, String salaryRange, String phone, Integer departmentId, Pageable pageable);
+    Page<Employee> findAll(String name, LocalDate dobFrom, LocalDate dobTo, Gender gender, String salaryRange, String phone, Integer departmentId,Pageable pageable);
 
     Optional<Employee> findById(UUID id);
 

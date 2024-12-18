@@ -1,10 +1,9 @@
-package vn.techzen.academy_pnv_25.dto.employee;
+package vn.techzen.academy_pnv_25.typeCustom;
 
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.springframework.format.annotation.DateTimeFormat;
-import vn.techzen.academy_pnv_25.entity.Employee;
 
 import java.time.LocalDate;
 
@@ -19,7 +18,7 @@ public class EmployeeSearchRequest {
     LocalDate dobFrom;
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     LocalDate dobTo;
-    Employee.Gender gender;
+    Gender gender;
     String salaryRange;
     String phone;
     Integer departmentId;

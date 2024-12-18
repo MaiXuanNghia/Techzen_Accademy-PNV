@@ -1,8 +1,10 @@
-package vn.techzen.academy_pnv_25.entity;
+package vn.techzen.academy_pnv_25.dto.employee;
 
-import jakarta.persistence.*;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import vn.techzen.academy_pnv_25.dto.Department.DepartmentRequest;
 import vn.techzen.academy_pnv_25.typeCustom.Gender;
 
 import java.time.LocalDate;
@@ -13,13 +15,8 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Entity
 @Builder
-public class Employee {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-
+public class EmployeeRequest {
     UUID id;
 
     String name;
@@ -32,9 +29,5 @@ public class Employee {
 
     String phone;
 
-    @ManyToOne
-    @JoinColumn(name = "department_id")
-    Department department;
+    DepartmentRequest department;
 }
-
-
