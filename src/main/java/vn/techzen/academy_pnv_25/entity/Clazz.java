@@ -13,6 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
+@Builder
 public class Clazz {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

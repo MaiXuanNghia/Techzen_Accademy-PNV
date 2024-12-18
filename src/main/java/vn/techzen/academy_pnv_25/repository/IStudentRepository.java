@@ -15,7 +15,7 @@ public interface IStudentRepository extends JpaRepository<Student, Integer> {
     List<Student> findByAttr(String name, Double fromScore, Double toScore);
 
     @Query(value = """
-            SELECT * FROM student WHERE name like CONCAT('%', :name, '%')
+            SELECT * FROM Student WHERE name like CONCAT('%', :name, '%')
             AND (:fromScore IS NULL OR score >= :fromScore)
             AND (:toScore IS NULL OR score <= :toScore)
             """, nativeQuery = true)
